@@ -5,6 +5,7 @@ import org.openqa.selenium.WebDriver;
 
 public class DashboardPage {
     WebDriver driver;
+
     public DashboardPage(WebDriver driver) {
         this.driver = driver;
     }
@@ -14,7 +15,7 @@ public class DashboardPage {
     private final By reservationsMenuNode = By.cssSelector("[href = '/reservations']");
 
     //Actions
-    public void clickOnUserVerificationLaterButton(){
+    public void clickOnUserVerificationLaterButton() {
         driver.findElement(userVerificationLaterButton).click();
     }
     /*public ReservationsPage clickOnReservationsPage(){

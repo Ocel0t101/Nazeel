@@ -10,19 +10,22 @@ import pages.LoginPage;
 public class TestBase {
     protected WebDriver driver;
     protected LoginPage loginPage;
+
     @BeforeClass
-    public void setUp(){
+    public void setUp() {
         driver = new EdgeDriver();
         driver.manage().window().maximize();
         driver.get("https://staging.nazeel.net:9002/login");
         loginPage = new LoginPage(driver);
     }
+
     @AfterMethod
-    public void goHome(){
+    public void goHome() {
         driver.get("https://staging.nazeel.net:9002/dashboard");
     }
+
     @AfterSuite
-    public void tearDown(){
+    public void tearDown() {
         driver.quit();
     }
 }

@@ -5,6 +5,7 @@ import org.openqa.selenium.WebDriver;
 
 public class LoginPage {
     WebDriver driver;
+
     public LoginPage(WebDriver driver) {
         this.driver = driver;
     }
@@ -17,16 +18,19 @@ public class LoginPage {
     //private final By loader = By.cssSelector(".loader-circle");
 
     //Actions
-    public void insertUsername(String username){
+    public void insertUsername(String username) {
         driver.findElement(userNameField).sendKeys(username);
     }
-    public void insertPassword(String password){
+
+    public void insertPassword(String password) {
         driver.findElement(passwordField).sendKeys(password);
     }
-    public void insertAccessCode(String accessCode){
+
+    public void insertAccessCode(String accessCode) {
         driver.findElement(accessCodeField).sendKeys(accessCode);
     }
-    public DashboardPage clickLoginButton(){
+
+    public DashboardPage clickLoginButton() {
         driver.findElement(loginButton).click();
         return new DashboardPage(driver);
     }
