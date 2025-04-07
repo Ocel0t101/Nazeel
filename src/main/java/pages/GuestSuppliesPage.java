@@ -1,4 +1,0 @@
-package pages;
-
-class GuestSuppliesPage {
-}

@@ -1,15 +1,10 @@
-package pages;
+package nazeel.pages;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
+
+import static nazeel.TestBase.getRootDriver;
 
 public class LoginPage {
-    WebDriver driver;
-
-    public LoginPage(WebDriver driver) {
-        this.driver = driver;
-    }
-
     //Locators
     private final By userNameField = By.id("usern");
     private final By passwordField = By.id("pass");
@@ -19,19 +14,19 @@ public class LoginPage {
 
     //Actions
     public void insertUsername(String username) {
-        driver.findElement(userNameField).sendKeys(username);
+        getRootDriver().findElement(userNameField).sendKeys(username);
     }
 
     public void insertPassword(String password) {
-        driver.findElement(passwordField).sendKeys(password);
+        getRootDriver().findElement(passwordField).sendKeys(password);
     }
 
     public void insertAccessCode(String accessCode) {
-        driver.findElement(accessCodeField).sendKeys(accessCode);
+        getRootDriver().findElement(accessCodeField).sendKeys(accessCode);
     }
 
     public DashboardPage clickLoginButton() {
-        driver.findElement(loginButton).click();
-        return new DashboardPage(driver);
+        getRootDriver().findElement(loginButton).click();
+        return new DashboardPage();
     }
 }

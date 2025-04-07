@@ -1,31 +1,32 @@
-package testBase;
+package nazeel;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeClass;
-import pages.LoginPage;
 
 public class TestBase {
-    protected WebDriver driver;
-    protected LoginPage loginPage;
+    private static WebDriver rootDriver;
 
     @BeforeClass
     public void setUp() {
-        driver = new EdgeDriver();
-        driver.manage().window().maximize();
-        driver.get("https://staging.nazeel.net:9002/login");
-        loginPage = new LoginPage(driver);
+        rootDriver = new EdgeDriver();
+        rootDriver.manage().window().maximize();
+        rootDriver.get("https://staging.nazeel.net:9002/login");
     }
 
     @AfterMethod
     public void goHome() {
-        driver.get("https://staging.nazeel.net:9002/dashboard");
+        rootDriver.get("https://staging.nazeel.net:9002/dashboard");
     }
 
     @AfterSuite
     public void tearDown() {
-        driver.quit();
+        rootDriver.quit();
+    }
+
+    public static WebDriver getRootDriver() {
+        return rootDriver;
     }
 }
