@@ -45,11 +45,14 @@ public class LoginPage {
         getCompanyProperties().get(index).click();
     }
 
-    public void Select_One_Property_(String Pro_Code) {
+    public void Select_One_Property_(String Pro_Code) throws InterruptedException {
         String currentURL = getRootDriver().getCurrentUrl();
         if (currentURL.contains("login")) {
+            Thread.sleep(4000);
             getRootDriver().findElement(By.xpath("//*[@id='propertyNameOrCode']")).sendKeys(Pro_Code);
+            Thread.sleep(4000);
             getRootDriver().findElement(By.xpath("//*[@id='propertyNameOrCode']")).sendKeys(Keys.ENTER);
+            Thread.sleep(4000);
             getRootDriver().findElement(Select_FirstProperty_Row).click();
         }
     }
