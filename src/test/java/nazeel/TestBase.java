@@ -37,4 +37,29 @@ public class TestBase {
     public static WebDriverWait explicitWait(int seconds) {
         return new WebDriverWait(rootDriver, Duration.ofSeconds(seconds));
     }
+
+    /**
+     * Sets an implicit wait for the WebDriver.
+     *
+     * @param seconds The duration of the implicit wait in seconds.
+     */
+    public static void implicitWait(int seconds) {
+        rootDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(seconds));
+    }
+
+    public enum Waits {
+        WAIT_UNTIL_LOADS(10),
+        WAIT_UNTIL_DISPLAYED(5),
+        WAIT_TEMP(1);
+
+        private final int seconds;
+
+        Waits(int seconds) {
+            this.seconds = seconds;
+        }
+
+        public int getSeconds() {
+            return seconds;
+        }
+    }
 }

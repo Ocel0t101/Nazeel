@@ -8,6 +8,7 @@ public class DashboardPage {
     //Locators
     private final By userVerificationLaterButton = By.xpath("//*[contains(text(),'Later')]");
     private final By reservationsMenuNode = By.cssSelector("[href = '/reservations']");
+    public final static String URL = "https://staging.nazeel.net:9002/dashboard";
 
     //Actions
     public void clickOnUserVerificationLaterButton() {
