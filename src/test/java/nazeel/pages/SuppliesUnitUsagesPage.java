@@ -15,7 +15,12 @@ public class SuppliesUnitUsagesPage {
     private final By Add_New_Unit_Usage = By.xpath("//div[2]/div/button");
     private final By dropdownLocator = By.xpath("//div/kendo-searchbar/input");
     private final By listItemText = By.xpath("//div/kendo-searchbar/input");
-    private final By listIteeeeeeeeeemText = By.xpath("//div/kendooooooooooooooooooo-searchbar/input");
+    private final By filterButton = By.cssSelector(".n-button.n-button--primary");
+    private final By statusSearchCriteria = By.cssSelector("[placeholder=\"Select Status\"]");
+    private final By activeStatus = By.cssSelector("//*[text()='active']");
+    private final By searchButton = By.cssSelector(".button.button--primary");
+    private final By editButton = By.cssSelector("button.button--primary.n-table-action.k-button");
+
 
   // Actions
     public void Click_Add_New_Unit_Usage_buttons() {
