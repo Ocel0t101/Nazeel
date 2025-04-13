@@ -17,12 +17,20 @@ public class LoginPage {
     private final By companyProperties = By.cssSelector("tbody[role='presentation']>tr");
     private final By Select_FirstProperty_Row = By.xpath("//kendo-grid/div/kendo-grid-list/div/div[1]/table/tbody/tr");
     //private final By loader = By.cssSelector(".loader-circle");
+    private final By userVerificationLaterButton = By.xpath
+            ("/html/body/div/app-root/nazeel-dashboard/div/div/main/app-home/app-verify-mobile-number-user/kendo-dialog/div[2]/kendo-dialog-actions/button[2]");
 
 
     //Actions
+
+    public void userVerificationLaterButton_click() {
+        getRootDriver().findElement(userVerificationLaterButton).click();
+    }
+
     public void insertUsername(String username) {
         getRootDriver().findElement(userNameField).sendKeys(username);
     }
+
 
     public void insertPassword(String password) {
         getRootDriver().findElement(passwordField).sendKeys(password);
