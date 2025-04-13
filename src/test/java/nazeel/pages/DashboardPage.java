@@ -2,7 +2,7 @@ package nazeel.pages;
 
 import org.openqa.selenium.By;
 
-import static nazeel.TestBase.getRootDriver;
+import static nazeel.base.TestBase.getRootDriver;
 
 public class DashboardPage {
     //Locators

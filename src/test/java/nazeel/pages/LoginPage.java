@@ -5,7 +5,7 @@ import org.openqa.selenium.WebElement;
 
 import java.util.List;
 
-import static nazeel.TestBase.getRootDriver;
+import static nazeel.base.TestBase.getRootDriver;
 
 public class LoginPage {
     //Locators
@@ -17,16 +17,19 @@ public class LoginPage {
     //private final By loader = By.cssSelector(".loader-circle");
 
     //Actions
-    public void insertUsername(String username) {
+    public LoginPage insertUsername(String username) {
         getRootDriver().findElement(userNameField).sendKeys(username);
+        return this;
     }
 
-    public void insertPassword(String password) {
+    public LoginPage insertPassword(String password) {
         getRootDriver().findElement(passwordField).sendKeys(password);
+        return this;
     }
 
-    public void insertAccessCode(String accessCode) {
+    public LoginPage insertAccessCode(String accessCode) {
         getRootDriver().findElement(accessCodeField).sendKeys(accessCode);
+        return this;
     }
 
     private List<WebElement> getCompanyProperties() {
