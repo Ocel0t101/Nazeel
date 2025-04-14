@@ -1,6 +1,6 @@
-package nazeel.test_suites;
+package nazeel.test_suites.Setup_Menus;
 
-import nazeel.TestBase;
+import nazeel.base.TestBase;
 import nazeel.pages.DashboardPage;
 import nazeel.pages.SuppliesUnitUsagesPage;
 import nazeel.pages.LoginPage;
@@ -19,7 +19,7 @@ public class SuppliesUnitUsagesClass extends TestBase {
         //** Select Property **//****
         loginPage.Select_One_Property_("P01558");
         Thread.sleep(8000);
-        loginPage.userVerificationLaterButton_click();
+        //loginPage.userVerificationLaterButton_click();
     }
 
     @Test(priority = 2)

@@ -8,7 +8,7 @@ import org.openqa.selenium.WebElement;
 
 import java.util.List;
 
-import static nazeel.TestBase.getRootDriver;
+import static nazeel.base.TestBase.getRootDriver;
 
 public class SuppliesUnitUsagesPage {
 
