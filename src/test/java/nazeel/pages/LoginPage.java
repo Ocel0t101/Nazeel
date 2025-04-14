@@ -32,9 +32,6 @@ public class LoginPage {
         getRootDriver().findElement(accessCodeField).sendKeys(accessCode);
     }
 
-    private List<WebElement> getCompanyProperties() {
-        return getRootDriver().findElements(companyProperties);
-    }
 
     public DashboardPage clickLoginButton() {
         getRootDriver().findElement(loginButton).click();
