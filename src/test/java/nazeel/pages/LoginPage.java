@@ -5,8 +5,11 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 
 import java.util.List;
+import org.openqa.selenium.WebElement;
 
-import static nazeel.TestBase.getRootDriver;
+import java.util.List;
+
+import static nazeel.base.TestBase.getRootDriver;
 
 public class LoginPage {
     //Locators
@@ -16,28 +19,30 @@ public class LoginPage {
     private final By loginButton = By.xpath("//button[contains(text(),'Login')]");
     private final By companyProperties = By.cssSelector("tbody[role='presentation']>tr");
     private final By Select_FirstProperty_Row = By.xpath("//kendo-grid/div/kendo-grid-list/div/div[1]/table/tbody/tr");
+    private final By companyProperties = By.cssSelector("tbody[role='presentation']>tr");
     //private final By loader = By.cssSelector(".loader-circle");
     private final By userVerificationLaterButton = By.xpath
             ("/html/body/div/app-root/nazeel-dashboard/div/div/main/app-home/app-verify-mobile-number-user/kendo-dialog/div[2]/kendo-dialog-actions/button[2]");
 
 
     //Actions
-
-    public void userVerificationLaterButton_click() {
-        getRootDriver().findElement(userVerificationLaterButton).click();
-    }
-
-    public void insertUsername(String username) {
+    public LoginPage insertUsername(String username) {
         getRootDriver().findElement(userNameField).sendKeys(username);
+        return this;
     }
 
-
-    public void insertPassword(String password) {
+    public LoginPage insertPassword(String password) {
         getRootDriver().findElement(passwordField).sendKeys(password);
+        return this;
     }
 
-    public void insertAccessCode(String accessCode) {
+    public LoginPage insertAccessCode(String accessCode) {
         getRootDriver().findElement(accessCodeField).sendKeys(accessCode);
+        return this;
+    }
+
+    private List<WebElement> getCompanyProperties() {
+        return getRootDriver().findElements(companyProperties);
     }
 
     private List<WebElement> getCompanyProperties() {

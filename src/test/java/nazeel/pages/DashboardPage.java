@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static nazeel.TestBase.getRootDriver;
+import static nazeel.base.TestBase.getRootDriver;
 
 public class DashboardPage extends SoftAssert {
 
@@ -19,6 +19,10 @@ public class DashboardPage extends SoftAssert {
     private static final By SetupMenu = By.xpath("//a[contains(text(),'Setup')]");
     private static final By SuppliesUnitUsages = By.xpath("//div[15]/a[3]");
     private static final By SUsages = By.xpath("//a[12]");
+    private final By userVerificationLaterButton = By.xpath("//*[contains(text(),'Later')]");
+    private final By reservationsMenuNode = By.cssSelector("[href = '/reservations']");
+    public final static String URL = "https://staging.nazeel.net:9002/dashboard";
+
     //Actions
    /* public void clickOnUserVerificationLaterButton() {
         getRootDriver().findElement(userVerificationLaterButton).click(); }
