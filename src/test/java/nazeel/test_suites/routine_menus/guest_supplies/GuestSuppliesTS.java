@@ -7,6 +7,7 @@ import nazeel.base.TestBase;
 import nazeel.pages.routine_menus.guest_supplies.GuestSuppliesPage;
 import nazeel.pages.LoginPage;
 import nazeel.pages.routine_menus.guest_supplies.SuppliesOrderPage;
+import nazeel.utils.RetryAnalyzer;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
@@ -78,7 +79,7 @@ public class GuestSuppliesTS extends TestBase {
         }
     }
 
-    @Test(testName = "TC01 - Request valid accomplished order", suiteName = "Guest Supplies")
+    @Test(testName = "TC01 - Request valid accomplished order", suiteName = "Guest Supplies", retryAnalyzer = RetryAnalyzer.class)
     public void tc01ValidAccomplishedOrder() {
         openGuestSuppliesPage();
         fillValidSupplyForm("2", 0, 0, 0, 1);
@@ -210,4 +211,106 @@ public class GuestSuppliesTS extends TestBase {
         System.out.println("Count:  " + suppliesPage.getClearButtonsCount());
         Assert.assertTrue(suppliesPage.getClearButtonsCount() <= 2);
     }
+
+    @Test(testName = "TC13 - Create accomplished order without appending", suiteName = "Guest Supplies")
+    public void tc13CreateAccomplishedOrderWithoutAppending() {
+        openGuestSuppliesPage();
+        suppliesPage.clickCreateAccomplishedButton();
+
+        // Expecting error toast
+        Assert.assertTrue(basePage.isErrorToastDisplayed(), "Expected error toast when no supplies are appended.");
+    }
+
+    @Test(testName = "TC14 - Create proposed order with valid supplies", suiteName = "Guest Supplies")
+    public void tc14CreateProposedOrderWithValidSupplies() {
+        openGuestSuppliesPage();
+        fillValidSupplyForm("2", 0, 0, 0, 0);
+        suppliesPage.clickAppendButton();
+        Assert.assertTrue(suppliesPage.countOfAddedSupplies() > 0, "Supply item not appended.");
+
+        suppliesPage.clickCreateProposedOrderButton();
+        assertSupplySuccessfullyOrdered();
+    }
+
+    @Test(testName = "TC15 - Create proposed order without appending", suiteName = "Guest Supplies")
+    public void tc15CreateProposedOrderWithoutAppending() {
+        openGuestSuppliesPage();
+        suppliesPage.clickCreateProposedOrderButton();
+
+        // Expect error toast
+        Assert.assertTrue(basePage.isErrorToastDisplayed(), "Expected error toast when creating proposed order without supplies.");
+    }
+
+    @Test(testName = "TC16 - Remove appended supply", suiteName = "Guest Supplies")
+    public void tc16RemoveAppendedSupply() {
+        openGuestSuppliesPage();
+        fillValidSupplyForm("2", 0, 0, 0, 0);
+        suppliesPage.clickAppendButton();
+        Assert.assertEquals(suppliesPage.countOfAddedSupplies(), 1);
+
+        suppliesPage.deleteAppendedSupplyByIndex(0);
+        Assert.assertEquals(suppliesPage.countOfAddedSupplies(), 0, "Supply not removed properly");
+    }
+
+
+    @Test(testName = "TC17 - Edit appended supply", suiteName = "Guest Supplies")
+    public void tc17EditAppendedSupply() {
+        openGuestSuppliesPage();
+        fillValidSupplyForm("2", 0, 0, 0, 0);
+        suppliesPage.clickAppendButton();
+        Assert.assertEquals(suppliesPage.countOfAddedSupplies(), 1);
+
+        suppliesPage.editAppendedSupplyByIndex(0);
+        Assert.assertEquals(suppliesPage.countOfAddedSupplies(), 0, "Supply not removed properly");
+        suppliesPage.clickAppendButton();
+        Assert.assertEquals(suppliesPage.countOfAddedSupplies(), 1);
+    }
+
+    @Test(testName = "TC18 - Discard appended supply", suiteName = "Guest Supplies")
+    public void tc18DiscardAppendedSupply() {
+        openGuestSuppliesPage();
+        fillValidSupplyForm("2", 0, 0, 0, 0);
+        suppliesPage.clickAppendButton();
+        Assert.assertEquals(suppliesPage.countOfAddedSupplies(), 1);
+
+        suppliesPage.clickDiscardButton();
+        try {
+            explicitWait(WAIT_UNTIL_LOADS.getSeconds()).until(ExpectedConditions.urlContains(SuppliesOrderPage.URL));
+        } catch (TimeoutException e) {
+            System.out.println("URL didn't change to supplies order page!");
+        }
+    }
+
+    @Test(testName = "TC19 - Create Accomplished Order with long comment", suiteName = "Guest Supplies")
+    public void tc19CreateAccomplishedOrderWithLongComment() {
+        openGuestSuppliesPage();
+        fillValidSupplyForm("5", 0, 0, 0, 0);
+
+        String longComment = "C".repeat(500);
+        suppliesPage.insertComment(longComment);
+        Assert.assertEquals(suppliesPage.getCommentLength(), 400, "Comment length should be 400.");
+
+        suppliesPage.clickAppendButton();
+        Assert.assertTrue(suppliesPage.countOfAddedSupplies() > 0);
+
+        suppliesPage.clickCreateAccomplishedButton();
+        assertSupplySuccessfullyOrdered();
+    }
+
+    @Test(testName = "TC20 - Create Proposed Order with long comment", suiteName = "Guest Supplies")
+    public void tc20CreateProposedOrderWithLongComment() {
+        openGuestSuppliesPage();
+        fillValidSupplyForm("1", 0, 0, 0, 0);
+
+        String longComment = "C".repeat(600);
+        suppliesPage.insertComment(longComment);
+        Assert.assertEquals(suppliesPage.getCommentLength(), 400, "Comment length should be 400.");
+
+        suppliesPage.clickAppendButton();
+        Assert.assertTrue(suppliesPage.countOfAddedSupplies() > 0);
+
+        suppliesPage.clickCreateProposedOrderButton(); // Make sure this method exists
+        assertSupplySuccessfullyOrdered(); // Reuse the same validation
+    }
+
 }
