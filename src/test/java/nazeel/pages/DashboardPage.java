@@ -1,12 +1,16 @@
 package nazeel.pages;
 
+import nazeel.utils.DelayedWebDriver;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 import org.testng.asserts.SoftAssert;
 
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -28,11 +32,24 @@ public class DashboardPage extends SoftAssert {
         getRootDriver().findElement(userVerificationLaterButton).click(); }
     */
 
-    public static void OpenSuppliesUnitUsagesPage() throws InterruptedException {
+    public  void OpenSuppliesUnitUsagesPage() throws InterruptedException {
         getRootDriver().findElement(SetupMenu).click();
         Thread.sleep(3000);
 
         WebElement element = getRootDriver().findElement( By.xpath("//a[12]"));
+
+        DelayedWebDriver.DelayedWebElement delayedWebElement = new DelayedWebDriver.DelayedWebElement(element , 1000);
+
+         element = delayedWebElement.getWrappedElement();
+
+        JavascriptExecutor jsExecutor;
+
+            jsExecutor = (JavascriptExecutor) getRootDriver();
+
+        jsExecutor.executeScript("arguments[0].click();", element);
+
+        jsExecutor.executeScript("arguments[0].click();", element);
+
         ((JavascriptExecutor) getRootDriver()).executeScript("arguments[0].scrollIntoView(true);", element);
 
         getRootDriver().findElement(SUsages).click();
@@ -40,29 +57,19 @@ public class DashboardPage extends SoftAssert {
         Thread.sleep(1000);
 
         getRootDriver().findElement(SuppliesUnitUsages).click();
-
-    }
-    public void AssertToastMessagesContains(String mesage) {
-        //FixMe error with the toast handling
-        List<WebElement> toastMsgs = getRootDriver().findElements(By.className("toast-message"));
-
-        List<String> mesagesContents = new ArrayList<>();
-
-        for (WebElement toast : toastMsgs) {
-
-            if (toast.getText().trim().toLowerCase().contains(mesage.toLowerCase())) {
-                this.assertTrue(true);
-                return;
-            } else {
-                mesagesContents.add(toast.getText());
-            }
-        }
-        if (!mesagesContents.isEmpty())
-            //noinspection DataFlowIssue
-            this.assertFalse(true, "actual : " + Arrays.toString(mesagesContents.toArray()) + "\nExpected : " + mesage.toLowerCase() + "\n");
-
     }
 
+    public void AssertToastMessagesContains(String actualToastText) {
+        //WebElement expectedToast= getRootDriver().findElement(By.cssSelector("div.toast-message"));
+
+        WebDriverWait wait = new WebDriverWait(getRootDriver(), Duration.ofSeconds(10));
+        WebElement expectedToast = wait.until(ExpectedConditions.refreshed(
+                ExpectedConditions.visibilityOfElementLocated(By.className("toast-message"))
+        ));
+        String expectedToastText = expectedToast
+                .getText()
+                        .trim();
+        // Assert the toast text
+        Assert.assertEquals(actualToastText, expectedToastText, "Toast message did not match!");
+    }
 }
-
-

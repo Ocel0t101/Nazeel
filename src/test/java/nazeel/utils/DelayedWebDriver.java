@@ -1,6 +1,5 @@
 package nazeel.utils;
 
-import org.jspecify.annotations.Nullable;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Interactive;
 import org.openqa.selenium.interactions.Sequence;
@@ -9,13 +8,14 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-public class DelayedWebDriver implements WebDriver, Interactive, JavascriptExecutor, TakesScreenshot {
+public class DelayedWebDriver implements WebDriver, Interactive, JavascriptExecutor, TakesScreenshot  {
     private final WebDriver driver;
     private final long intervalInMillis;
 
     public DelayedWebDriver(WebDriver driver, long intervalInMillis) {
         this.driver = driver;
         this.intervalInMillis = intervalInMillis;
+
     }
 
     private void delay() {
@@ -31,6 +31,9 @@ public class DelayedWebDriver implements WebDriver, Interactive, JavascriptExecu
         driver.get(url);
         delay();
     }
+
+
+
 
     @Override
     public WebElement findElement(By by) {
@@ -125,12 +128,21 @@ public class DelayedWebDriver implements WebDriver, Interactive, JavascriptExecu
         return ((TakesScreenshot)driver).getScreenshotAs(target);
     }
 
-    public static class DelayedWebElement implements WebElement {
+    public static class DelayedWebElement implements WebElement  , WrapsElement{
+
         private final WebElement element;
         private final long delayInMillis;
+        private final WebElement wrappedElement;
 
+
+        @SuppressWarnings("NullableProblems")
+        @Override
+        public WebElement getWrappedElement() {
+            return this.wrappedElement;
+        }
         public DelayedWebElement(WebElement element, long delayInMillis) {
             this.element = element;
+            this.wrappedElement = element;
             this.delayInMillis = delayInMillis;
         }
 
@@ -141,6 +153,8 @@ public class DelayedWebDriver implements WebDriver, Interactive, JavascriptExecu
                 Thread.currentThread().interrupt();
             }
         }
+
+
 
         @Override
         public void click() {

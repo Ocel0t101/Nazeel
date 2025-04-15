@@ -8,8 +8,9 @@ import org.testng.annotations.Test;
 
 public class SuppliesUnitUsagesClass extends TestBase {
 
-    @Test(priority = 1)
-    public void testLogin() throws Exception {
+
+   @Test (priority = 1 , testName = "TC01 - Login", suiteName = "Guest Supplies Usage")
+    public void TC01_testLogin() throws Exception {
         LoginPage loginPage = new LoginPage();
         loginPage.insertUsername("maiow");
         loginPage.insertPassword("123456Mm&&");
@@ -18,25 +19,20 @@ public class SuppliesUnitUsagesClass extends TestBase {
         Thread.sleep(4000);
         //** Select Property **//****
         loginPage.Select_One_Property_("P01558");
-        Thread.sleep(8000);
+        Thread.sleep(3000);
         //loginPage.userVerificationLaterButton_click();
     }
 
-    @Test(priority = 2)
-    public void AddNew_SuppliesUnitUsages() throws Exception {
+    @Test (priority = 2, testName = "TC02 - AddNew_SuppliesUnitUsages", suiteName = "Guest Supplies Usage")
+    public void TC02_AddNew_SuppliesUnitUsages() throws Exception {
 
-        Thread.sleep(4000);
-
-        //**  Open clickOnSuppliesUnitUsagesPage**//****
+     //   Thread.sleep(4000);
 
         DashboardPage DashboardPage = new DashboardPage();
 
         DashboardPage.OpenSuppliesUnitUsagesPage();
-
         Thread.sleep(4000);
-
         //** open Add new record here !!
-
         SuppliesUnitUsagesPage SuppliesUnitUsagesPage = new SuppliesUnitUsagesPage();
         SuppliesUnitUsagesPage.Click_Add_New_Unit_Usage_buttons();
         Thread.sleep(7000);
@@ -52,7 +48,8 @@ public class SuppliesUnitUsagesClass extends TestBase {
         Thread.sleep(1000);
        SuppliesUnitUsagesPage.Save();
         Thread.sleep(1000);
-        DashboardPage.AssertToastMessagesContains("Saved Successfully");
+        //Saved Successfully
+        DashboardPage.AssertToastMessagesContains("tttes");
 
     }
 }
