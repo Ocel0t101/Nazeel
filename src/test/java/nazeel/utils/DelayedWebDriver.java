@@ -1,67 +1,62 @@
 package nazeel.utils;
 
-import org.jspecify.annotations.Nullable;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Interactive;
 import org.openqa.selenium.interactions.Sequence;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import static nazeel.base.TestBase.sleep;
+
 /**
- * Custom WebDriver wrapper that introduces a delay after every WebDriver operation.
- * Useful for debugging, observing UI behavior, or simulating slow users.
- *
- * Implements WebDriver, Interactive, JavascriptExecutor, and TakesScreenshot interfaces
- * to ensure full compatibility with Selenium operations.
+ * Custom WebDriver wrapper that adds a fixed delay after WebDriver interactions.
+ * Helps simulate user pacing or observe dynamic UI behavior during automation.
  */
 public class DelayedWebDriver implements WebDriver, Interactive, JavascriptExecutor, TakesScreenshot {
-    private final WebDriver driver;
-    private final long intervalInMillis;
+    private final WebDriver driver;             // Original WebDriver instance
+    private final long intervalInMillis;        // Delay duration after each operation (in ms)
 
-    /**
-     * Constructor to initialize the wrapped WebDriver and delay interval.
-     *
-     * @param driver            The actual WebDriver to wrap.
-     * @param intervalInMillis  Delay duration in milliseconds between actions.
-     */
+    // Constructor to initialize with driver and delay interval
     public DelayedWebDriver(WebDriver driver, long intervalInMillis) {
         this.driver = driver;
         this.intervalInMillis = intervalInMillis;
     }
 
-    /**
-     * Helper method to apply the configured delay.
-     */
+    // Central delay method using TestBase sleep
     private void delay() {
-        try {
-            Thread.sleep(intervalInMillis);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
+        sleep((int) intervalInMillis);
     }
 
-    // ----------- WebDriver Interface Implementation -----------
+    // ------------------ WebDriver Implementation ------------------
 
     @Override
     public void get(String url) {
-        driver.get(url);
-        delay();
+        driver.get(url);   // Navigate to URL
+        delay();           // Wait after operation
     }
 
     @Override
     public WebElement findElement(By by) {
-        delay();
+        delay();  // Simulate delay before find
         WebElement element = driver.findElement(by);
-        return new DelayedWebElement(element, intervalInMillis);
+        return new DelayedWebElement(element, intervalInMillis);  // Wrap in delayed element
     }
 
     @Override
     public List<WebElement> findElements(By by) {
-        return driver.findElements(by);
+        delay();  // Delay before search
+        List<WebElement> elements = driver.findElements(by);
+        List<WebElement> delayedElements = new ArrayList<>();
+        for (WebElement element : elements) {
+            delayedElements.add(new DelayedWebElement(element, intervalInMillis));
+        }
+        return delayedElements;
     }
 
+    // Simple getters with no delay needed
     @Override
     public String getCurrentUrl() {
         return driver.getCurrentUrl();
@@ -77,6 +72,7 @@ public class DelayedWebDriver implements WebDriver, Interactive, JavascriptExecu
         return driver.getPageSource();
     }
 
+    // Window/session management
     @Override
     public void close() {
         driver.close();
@@ -112,11 +108,11 @@ public class DelayedWebDriver implements WebDriver, Interactive, JavascriptExecu
         return driver.manage();
     }
 
-    // ----------- Interactive Interface Implementation -----------
+    // ------------------ Interactive Interface ------------------
 
     @Override
     public void perform(Collection<Sequence> actions) {
-        delay();
+        delay();  // Delay before performing interactions
         ((Interactive) driver).perform(actions);
     }
 
@@ -126,7 +122,7 @@ public class DelayedWebDriver implements WebDriver, Interactive, JavascriptExecu
         ((Interactive) driver).resetInputState();
     }
 
-    // ----------- JavascriptExecutor Interface Implementation -----------
+    // ------------------ JavascriptExecutor Interface ------------------
 
     @Override
     public Object executeScript(String script, Object... args) {
@@ -138,55 +134,60 @@ public class DelayedWebDriver implements WebDriver, Interactive, JavascriptExecu
         return ((JavascriptExecutor) driver).executeAsyncScript(script, args);
     }
 
-    // ----------- TakesScreenshot Interface Implementation -----------
+    // ------------------ Screenshot Interface ------------------
 
     @Override
     public <X> X getScreenshotAs(OutputType<X> target) throws WebDriverException {
         return ((TakesScreenshot) driver).getScreenshotAs(target);
     }
 
-    /**
-     * Inner class to wrap WebElement and add delay after interactions.
-     */
-    public static class DelayedWebElement implements WebElement {
-        private final WebElement element;
-        private final long delayInMillis;
+    // ******************************************************************
+    // Inner class that wraps WebElement to introduce delay & retries
+    // ******************************************************************
 
-        /**
-         * Constructor to wrap a WebElement with a post-action delay.
-         *
-         * @param element         The actual WebElement to wrap.
-         * @param delayInMillis   Delay duration after each action.
-         */
+    public static class DelayedWebElement implements WebElement, WrapsElement {
+        private final WebElement element;     // Original WebElement
+        private final long delayInMillis;     // Delay after each action
+        private final int maxRetries = 3;     // Retry count for flaky interactions
+
         public DelayedWebElement(WebElement element, long delayInMillis) {
             this.element = element;
             this.delayInMillis = delayInMillis;
         }
 
         private void delay() {
-            try {
-                Thread.sleep(delayInMillis);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
+            sleep((int) delayInMillis);
+        }
+
+        // Wrap interaction with retry logic
+        private void performWithRetry(Runnable action) {
+            for (int attempt = 0; attempt <= maxRetries; attempt++) {
+                try {
+                    action.run();
+                    delay();
+                    return;
+                } catch (ElementNotInteractableException | NoSuchElementException e) {
+                    if (attempt == maxRetries) throw e;
+                    System.out.println("⚡ Retry (" + (attempt + 1) + "/" + maxRetries + ") after: " + e.getClass().getSimpleName());
+                    sleep((int) delayInMillis);
+                }
             }
         }
 
+        // WebElement overrides with retry + delay
         @Override
         public void click() {
-            element.click();
-            delay();
+            performWithRetry(element::click);
         }
 
         @Override
         public void sendKeys(CharSequence... keysToSend) {
-            element.sendKeys(keysToSend);
-            delay();
+            performWithRetry(() -> element.sendKeys(keysToSend));
         }
 
         @Override
         public void clear() {
-            element.clear();
-            delay();
+            performWithRetry(element::clear);
         }
 
         @Override
@@ -195,6 +196,7 @@ public class DelayedWebDriver implements WebDriver, Interactive, JavascriptExecu
             delay();
         }
 
+        // Simple getters
         @Override
         public String getText() {
             return element.getText();
@@ -245,21 +247,30 @@ public class DelayedWebDriver implements WebDriver, Interactive, JavascriptExecu
             return element.getTagName();
         }
 
+        // Screenshot from element
         @Override
         public <X> X getScreenshotAs(OutputType<X> target) {
             return element.getScreenshotAs(target);
         }
 
+        // Re-wrap nested elements with same delay logic
         @Override
         public WebElement findElement(By by) {
-            return element.findElement(by);
+            delay();
+            WebElement inner = element.findElement(by);
+            return new DelayedWebElement(inner, delayInMillis);
         }
 
         @Override
         public List<WebElement> findElements(By by) {
-            return element.findElements(by);
+            delay();
+            List<WebElement> raw = element.findElements(by);
+            List<WebElement> wrapped = new ArrayList<>();
+            for (WebElement el : raw) wrapped.add(new DelayedWebElement(el, delayInMillis));
+            return wrapped;
         }
 
+        // Equality and identity
         @Override
         public boolean equals(Object obj) {
             return element.equals(obj);
@@ -268,6 +279,12 @@ public class DelayedWebDriver implements WebDriver, Interactive, JavascriptExecu
         @Override
         public int hashCode() {
             return element.hashCode();
+        }
+
+        // Get the raw WebElement (unwrapped)
+        @Override
+        public WebElement getWrappedElement() {
+            return element;
         }
     }
 }
