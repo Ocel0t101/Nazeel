@@ -8,15 +8,18 @@ import org.testng.ITestResult;
 
 /**
  * Global TestNG listener to handle test lifecycle events.
- * Captures screenshots on failure, logs test results, and tracks suite-level execution.
+ * Implements the ITestListener interface to:
+ * - Capture screenshots on test failure
+ * - Log test result outcomes to the console
+ * - Track test suite execution start and end
  */
 public class TestListener implements ITestListener {
 
     /**
-     * Invoked when a test case fails.
-     * Logs the failure and captures a screenshot using the shared WebDriver instance.
+     * Called when an individual test method fails.
+     * Logs the test name and takes a screenshot using the shared WebDriver instance.
      *
-     * @param result Contains information about the failed test.
+     * @param result Metadata about the failed test, including name, class, and error.
      */
     @Override
     public void onTestFailure(ITestResult result) {
@@ -26,10 +29,10 @@ public class TestListener implements ITestListener {
     }
 
     /**
-     * Invoked when a test case passes successfully.
-     * Logs the test pass result.
+     * Called when a test method passes successfully.
+     * Simply logs the name of the passing test.
      *
-     * @param result Contains information about the passed test.
+     * @param result Metadata for the passed test method.
      */
     @Override
     public void onTestSuccess(ITestResult result) {
@@ -37,10 +40,10 @@ public class TestListener implements ITestListener {
     }
 
     /**
-     * Invoked before any test in the current test context starts.
-     * Useful for logging or initializing test data/resources.
+     * Called before the start of the test suite or test class.
+     * Good place for logging suite name or initializing global resources.
      *
-     * @param context The test context containing metadata for the suite/class execution.
+     * @param context Metadata about the entire test context (suite or class).
      */
     @Override
     public void onStart(ITestContext context) {
@@ -48,10 +51,10 @@ public class TestListener implements ITestListener {
     }
 
     /**
-     * Invoked after all tests in the test context have completed.
-     * Useful for final reporting or cleanup operations.
+     * Called after the test suite or test class finishes execution.
+     * Useful for cleanup tasks, teardown actions, or logging final status.
      *
-     * @param context The test context for the suite/class.
+     * @param context Metadata for the finished suite/class.
      */
     @Override
     public void onFinish(ITestContext context) {

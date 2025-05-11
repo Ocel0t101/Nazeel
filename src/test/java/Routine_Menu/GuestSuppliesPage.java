@@ -34,6 +34,9 @@ public class GuestSuppliesPage {
     private final By deleteAppendedOrderButtonBy = By.cssSelector(".button--danger.k-button");
     private final By editAppendedOrderButtonBy = By.cssSelector(".button--primary.n-table-action.k-button");
     private final By discardOrderButtonBy = By.cssSelector(".n-button.n-button--danger-border.margin-inline");
+    private final By cancelButtonBy = By.cssSelector("div.col-md-4>button.n-button.n-button--danger-border");
+    private final By unitOptionsLabel = By.cssSelector("label");
+    private String selectedCategory, selectedSupply, selectedUnitTypes, selectedUnitNumbers;
 
     // Locators to interact with UI elements
     private WebElement getCategoryDropbox() {
@@ -64,12 +67,20 @@ public class GuestSuppliesPage {
         return getRootDriver().findElements(optionsBy);
     }
 
+    private WebElement getUnitTypeOptionLabel(WebElement unitTypeOption) {
+        return unitTypeOption.findElement(unitOptionsLabel);
+    }
+
     private WebElement getUnitNumberMultiSelector() {
         return getRootDriver().findElement(unitNumberInputBy);
     }
 
-    private WebElement getUnitNumberOption(int index) {
-        return getRootDriver().findElements(optionsBy).get(index);
+    private List<WebElement> getUnitNumberOptions() {
+        return getRootDriver().findElements(optionsBy);
+    }
+
+    private WebElement getUnitNumberOptionLabel(WebElement unitNumberOption) {
+        return unitNumberOption.findElement(unitOptionsLabel);
     }
 
     private WebElement getAppendButtonBy() {
@@ -116,151 +127,233 @@ public class GuestSuppliesPage {
         return getRootDriver().findElement(discardOrderButtonBy);
     }
 
+    private WebElement getCancelButton() {
+        return getRootDriver().findElement(cancelButtonBy);
+    }
+
     // --------- Page Actions ---------
 
-    /** Navigates to the guest supplies creation page. */
+    /**
+     * Navigates to the guest supplies creation page.
+     */
     public GuestSuppliesPage navigateToGuestSuppliesPage() {
         getRootDriver().get(URL);
         return this;
     }
 
-    /** Opens the category dropdown. */
+    /**
+     * Opens the category dropdown.
+     */
     public GuestSuppliesPage clickCategoryDropbox() {
         getCategoryDropbox().click();
         return this;
     }
 
-    /** Checks if the category dropdown is visible. */
+    /**
+     * Checks if the category dropdown is visible.
+     */
     public boolean isCategoryDropboxShown() {
         try {
             return getCategoryDropbox().isDisplayed() && getCategoryDropbox().getCssValue("opacity").equals("1");
-        } catch (NoSuchElementException e) {
+        } catch (NoSuchElementException exception) {
             return false;
         }
     }
 
-    /** Selects a category option by index. */
+    /**
+     * Selects a category option by index.
+     */
     public GuestSuppliesPage selectCategoryOption(int index) {
+        selectedCategory = getCategoryOptions().get(index).getText();
         getCategoryOptions().get(index).click();
         return this;
     }
 
-    /** Checks if category options are visible. */
+    /**
+     * Checks if category options are visible.
+     */
     public boolean isCategoryOptionsDisplayed() {
         return getCategoryOptions().getFirst().getCssValue("opacity").equals("1");
     }
 
-    /** Opens the supply dropdown. */
+    /**
+     * Opens the supply dropdown.
+     */
     public GuestSuppliesPage clickSupplyDropbox() {
         getSupplyDropbox().click();
         return this;
     }
 
-    /** Selects a supply option by index. */
+    /**
+     * Selects a supply option by index.
+     */
     public GuestSuppliesPage selectSupplyOption(int index) {
+        selectedSupply = getSupplyOptions().get(index).getText();
         getSupplyOptions().get(index).click();
         return this;
     }
 
-    /** Checks if supply options are visible. */
+    /**
+     * Checks if supply options are visible.
+     */
     public boolean isSupplyOptionsDisplayed() {
         return getSupplyOptions().getFirst().getCssValue("opacity").equals("1");
     }
 
-    /** Enters a quantity in the input field. */
+    /**
+     * Enters a quantity in the input field.
+     */
     public GuestSuppliesPage insertQuantity(String quantity) {
         getQuantityTextBox().sendKeys(quantity);
         return this;
     }
 
-    /** Opens the unit types multi-select dropdown. */
+    /**
+     * Opens the unit types multi-select dropdown.
+     */
     public GuestSuppliesPage clickUnitTypes() {
         getUnitTypesMultiSelector().click();
         return this;
     }
 
-    /** Selects a unit type option by index. */
-    public GuestSuppliesPage selectUnitTypesOption(int index) {
+    /**
+     * Selects a unit type option by index.
+     */
+    public GuestSuppliesPage selectSingleUnitTypesOption(int index) {
+        selectedUnitTypes = getUnitTypeOptionLabel(getUnitTypesOptions().get(index)).getText();
         getUnitTypesOptions().get(index).click();
         return this;
     }
 
-    /** Checks if unit type options are visible. */
+    /**
+     * Checks if unit type options are visible.
+     */
     public boolean isUnitTypesOptionsDisplayed() {
         return getUnitTypesOptions().getFirst().getCssValue("opacity").equals("1");
     }
 
-    /** Opens the unit number multi-select dropdown. */
+    /**
+     * Opens the unit number multi-select dropdown.
+     */
     public GuestSuppliesPage clickUnitNumber() {
         getUnitNumberMultiSelector().click();
         return this;
     }
 
-    /** Selects a unit number option by index. */
-    public GuestSuppliesPage selectUnitNumberOption(int index) {
-        getUnitNumberOption(index).click();
+    /**
+     * Selects a unit number option by index.
+     */
+    public GuestSuppliesPage selectSingleUnitNumberOption(int index) {
+        selectedUnitNumbers = getUnitNumberOptionLabel(getUnitNumberOptions().get(index)).getText();
+        getUnitNumberOptions().get(index).click();
         return this;
     }
 
-    /** Clicks the append button to add the supply row. */
+    /**
+     * Clicks the append button to add the supply row.
+     */
     public void clickAppendButton() {
         getAppendButtonBy().click();
     }
 
-    /** Returns the count of added supplies in the table. */
+    /**
+     * Returns the count of added supplies in the table.
+     */
     public int countOfAddedSupplies() {
         return getAddedSuppliesTable().size();
     }
 
-    /** Clicks the "Create Accomplished Order" button. */
+    /**
+     * Clicks the "Create Accomplished Order" button.
+     */
     public GuestSuppliesPage clickCreateAccomplishedButton() {
         getCreateAccomplishedButton().click();
         return this;
     }
 
-    /** Gets the quantity value of a specific supply row by index. */
+    /**
+     * Gets the quantity value of a specific supply row by index.
+     */
     public String quantityPerUnitValueByIndex(int index) {
         return getQuantityPerUnitValuesRows().get(index).getText();
     }
 
-    /** Inserts a comment into the comment text area. */
+    /**
+     * Inserts a comment into the comment text area.
+     */
     public GuestSuppliesPage insertComment(String comment) {
         getCommentTextBox().sendKeys(comment);
         return this;
     }
 
-    /** Returns the length of the comment in the textarea. */
+    /**
+     * Returns the length of the comment in the textarea.
+     */
     public int getCommentLength() {
         return Objects.requireNonNull(getCommentTextBox().getAttribute("value")).length();
     }
 
-    /** Returns the count of clear buttons shown in the form. */
+    /**
+     * Returns the count of clear buttons shown in the form.
+     */
     public int getClearButtonsCount() {
         return getClearButtons().size();
     }
 
-    /** Opens the dropdown and clicks the "Create Proposed Order" option. */
+    /**
+     * Opens the dropdown and clicks the "Create Proposed Order" option.
+     */
     public GuestSuppliesPage clickCreateProposedOrderButton() {
         getOrderDropButton().click();
         getProposedOrderButton().click();
         return this;
     }
 
-    /** Clicks the edit button for an appended supply row by index. */
+    /**
+     * Clicks the edit button for an appended supply row by index.
+     */
     public GuestSuppliesPage editAppendedSupplyByIndex(int index) {
         getEditAppendedOrderButtons().get(index).click();
         return this;
     }
 
-    /** Clicks the delete button for an appended supply row by index. */
+    /**
+     * Clicks the delete button for an appended supply row by index.
+     */
     public GuestSuppliesPage deleteAppendedSupplyByIndex(int index) {
         getDeleteAppendedOrderButtons().get(index).click();
         return this;
     }
 
-    /** Clicks the discard button to cancel the entire supply order. */
+    /**
+     * Clicks the discard button to cancel the entire supply order.
+     */
     public GuestSuppliesPage clickDiscardButton() {
         getDiscardButton().click();
         return this;
+    }
+
+    /**
+     * Clicks the cancel button to cancel the entire supply order item.
+     */
+    public GuestSuppliesPage clickCancelButton() {
+        getCancelButton().click();
+        return this;
+    }
+
+    public String getSelectedUnitNumbers() {
+        return selectedUnitNumbers;
+    }
+
+    public String getSelectedUnitTypes() {
+        return selectedUnitTypes;
+    }
+
+    public String getSelectedSupply() {
+        return selectedSupply;
+    }
+
+    public String getSelectedCategory() {
+        return selectedCategory;
     }
 }

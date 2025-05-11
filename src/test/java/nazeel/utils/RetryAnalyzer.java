@@ -6,7 +6,7 @@ import org.testng.ITestResult;
 /**
  * RetryAnalyzer is a custom implementation of TestNG's IRetryAnalyzer.
  * It automatically retries failed tests up to a specified maximum number of attempts.
- *
+ * <p>
  * This is useful for handling flaky tests caused by transient issues like timing,
  * network delays, or UI rendering glitches.
  */
@@ -16,7 +16,11 @@ public class RetryAnalyzer implements IRetryAnalyzer {
     private int retryCount = 0;
 
     // Defines the maximum number of retry attempts allowed
-    private static final int maxRetry = 25;
+    private static final int maxRetry = 1;
+
+    public int getRetryCount() {
+        return retryCount;
+    }
 
     /**
      * This method is invoked by TestNG after a test fails.
@@ -27,6 +31,6 @@ public class RetryAnalyzer implements IRetryAnalyzer {
     @Override
     public boolean retry(ITestResult result) {
         // If retryCount is less than maxRetry, increment and return true to retry the test
-        return retryCount++ < maxRetry;
+        return (retryCount++ < maxRetry);
     }
 }
