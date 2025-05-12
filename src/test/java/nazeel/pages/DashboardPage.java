@@ -30,10 +30,11 @@ public class DashboardPage extends SoftAssert {
     //Actions
    /* public void clickOnUserVerificationLaterButton() {
         getRootDriver().findElement(userVerificationLaterButton).click(); }
-    */
+   */
 
     public  void OpenSuppliesUnitUsagesPage() throws InterruptedException {
         getRootDriver().findElement(SetupMenu).click();
+
         Thread.sleep(3000);
 
         WebElement element = getRootDriver().findElement( By.xpath("//a[12]"));
@@ -48,13 +49,9 @@ public class DashboardPage extends SoftAssert {
 
         jsExecutor.executeScript("arguments[0].click();", element);
 
-
-
         ((JavascriptExecutor) getRootDriver()).executeScript("arguments[0].scrollIntoView(true);", element);
 
-        getRootDriver().findElement(SUsages).click();
-
-        Thread.sleep(1000);
+        Thread.sleep(3000);
 
         getRootDriver().findElement(SuppliesUnitUsages).click();
     }
