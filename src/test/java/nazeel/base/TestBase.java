@@ -8,6 +8,13 @@ import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.*;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import java.time.Duration;
 
@@ -17,10 +24,10 @@ public class TestBase {
     private static WebDriver rootDriver;
 
     @BeforeClass
-    public void setUp() {
-        WebDriverManager.edgedriver().setup();
-        rootDriver = new DelayedWebDriver(new EdgeDriver(), 1000);
-        rootDriver.manage().window().maximize();
+    public void setUp() throws IOException {
+        WebDriverManager.chromedriver().setup();
+        rootDriver = new DelayedWebDriver(new ChromeDriver(), 1000);
+      rootDriver.manage().window().maximize();
         rootDriver.get("https://staging.nazeel.net:9002/login");
     }
 

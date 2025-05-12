@@ -48,7 +48,7 @@ public class DashboardPage extends SoftAssert {
 
         jsExecutor.executeScript("arguments[0].click();", element);
 
-        jsExecutor.executeScript("arguments[0].click();", element);
+
 
         ((JavascriptExecutor) getRootDriver()).executeScript("arguments[0].scrollIntoView(true);", element);
 
@@ -64,11 +64,9 @@ public class DashboardPage extends SoftAssert {
 
         WebDriverWait wait = new WebDriverWait(getRootDriver(), Duration.ofSeconds(10));
         WebElement expectedToast = wait.until(ExpectedConditions.refreshed(
-                ExpectedConditions.visibilityOfElementLocated(By.className("toast-message"))
-        ));
-        String expectedToastText = expectedToast
-                .getText()
-                        .trim();
+                ExpectedConditions.visibilityOfElementLocated(By.className("toast-message"))));
+
+        String expectedToastText = expectedToast.getText().trim();
         // Assert the toast text
         Assert.assertEquals(actualToastText, expectedToastText, "Toast message did not match!");
     }

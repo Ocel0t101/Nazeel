@@ -1,9 +1,10 @@
-package nazeel.pages;
+package nazeel.pages.Setup_Menus;
 
 import org.openqa.selenium.By;
 
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
+import org.testng.Assert;
 
 
 import java.util.List;
@@ -22,10 +23,45 @@ public class SuppliesUnitUsagesPage {
     private final By SupplyField = By.xpath("//div[3]/div[2]/kendo-combobox/span/span/span");
     private final By AppendButton = By.xpath("//div[5]/button");
     private final By SaveButton = By.xpath("//kendo-dialog-actions/button[2]");
+    private final By Filter = By.xpath("//button[2]");
+    private final By UnitType_dropdownField_Filter = By.xpath("//div[2]/kendo-combobox/span/span/span");
+    private final By Search = By.xpath("//div[4]/div/button");
+
 
     // Actions
-    public void Click_Add_New_Unit_Usage_buttons() {
+    public void Click_Add_New_Unit_Usage_button() {
         getRootDriver().findElement(Add_New_Unit_Usage).click();
+    }
+
+    public void Click_Search_button() {
+        getRootDriver().findElement(Search).click();
+    }
+
+    public void Click_Filter_button() {
+        getRootDriver().findElement(Filter).click();
+    }
+
+    public void Verify_Unit_Types_In_Grid (String UnitTypeIs ) {
+        List<WebElement> items = getRootDriver().findElements(By.xpath("//tr/td[2]"));
+        for (WebElement item : items) {
+           String actualUnitsTypeIs = item.getText();
+            Assert.assertEquals(actualUnitsTypeIs, UnitTypeIs, "there are a type in the grid  Mismatch" );
+        }
+    }
+
+    public void Filter_bySelectUnitType(String UnitTypeIs) throws Exception {
+        getRootDriver().findElement(UnitType_dropdownField_Filter).click();
+        Thread.sleep(1000);
+        List<WebElement> items = getRootDriver().findElements(By.xpath("//li"));
+        try {
+            WebElement selectedItem = items.stream()
+                    .filter(i -> i.getText().toLowerCase().contains(UnitTypeIs.toLowerCase()))
+                    .findFirst()
+                    .orElseThrow(() -> new NoSuchElementException("unit Type not here"));
+            selectedItem.click();
+            Thread.sleep(1000);
+        } catch (NoSuchElementException _) {
+        }
     }
 
     public void Add_New_Guest_Supplies_bySelectUnitType(String UnitTypeIs) throws Exception {
@@ -42,13 +78,10 @@ public class SuppliesUnitUsagesPage {
                     .orElseThrow(() -> new NoSuchElementException("unit Type not here"));
 
             selectedItem.click();
-
             Thread.sleep(1000);
-
             getRootDriver().findElement(dailyQuantityCriteria).click();
 
-            // selectedItem.getText()); if need to return item
-        } catch (NoSuchElementException e) {
+        } catch (NoSuchElementException _) {
         }
     }
 
