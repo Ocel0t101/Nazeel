@@ -6,6 +6,7 @@ import nazeel.pages.LoginPage;
 import nazeel.utils.DelayedWebDriver;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -48,8 +49,8 @@ public class TestBase {
      */
     @BeforeClass
     public void setUp() {
-        WebDriverManager.edgedriver().setup(); // Setup EdgeDriver via WebDriverManager
-        rootDriver = new DelayedWebDriver(new EdgeDriver(), 600); // Wrap driver with artificial delay (600ms)
+        WebDriverManager.chromedriver().setup(); // Setup EdgeDriver via WebDriverManager
+        rootDriver = new DelayedWebDriver(new ChromeDriver(), 600); // Wrap driver with artificial delay (600ms)
         rootDriver.manage().window().maximize();
         rootDriver.get("https://staging.nazeel.net:9002/login"); // Go to login page
         tempLoginAndNavigateToDashboard(); // Perform login and select property
