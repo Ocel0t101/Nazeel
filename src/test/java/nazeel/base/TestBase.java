@@ -28,7 +28,7 @@ public class TestBase {
         WebDriverManager.chromedriver().setup();
         rootDriver = new DelayedWebDriver(new ChromeDriver(), 1000);
       rootDriver.manage().window().maximize();
-        rootDriver.get("https://staging.nazeel.net:9002/login");
+        rootDriver.get("https://app-simulation.nazeel.net/login");
     }
 
     @AfterClass
