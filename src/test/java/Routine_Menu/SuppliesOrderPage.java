@@ -1,4 +1,4 @@
-package nazeel.pages.routine_menus.guest_supplies;
+package Routine_Menu;
 
 public class SuppliesOrderPage {
     public final static String URL = "https://staging.nazeel.net:9002/guest-supplies/supplies-order";

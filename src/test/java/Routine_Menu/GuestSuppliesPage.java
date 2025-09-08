@@ -1,4 +1,4 @@
-package nazeel.pages.routine_menus.guest_supplies;
+package Routine_Menu;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;

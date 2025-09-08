@@ -15,6 +15,7 @@ public class SuppliesUnitUsagesPage {
 
     // Locators
     private final By Add_New_Unit_Usage = By.xpath("//div[2]/div/button");
+
     private final By UnitType_dropdownField = By.xpath("//div/kendo-searchbar/input");
 
     private final By EditUnitType_dropdownField = By.xpath("//div[4]/div/kendo-combobox/span/span/span");

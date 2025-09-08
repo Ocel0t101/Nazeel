@@ -1,12 +1,10 @@
-package nazeel.test_suites.routine_menus.guest_supplies;
+package Routine_Menu;
 
 import nazeel.base.PageBase;
 import nazeel.listeners.TestListener;
-import nazeel.pages.DashboardPage;
+import nazeel.pages.Routine_Menus.DashboardPage;
 import nazeel.base.TestBase;
-import nazeel.pages.routine_menus.guest_supplies.GuestSuppliesPage;
 import nazeel.pages.LoginPage;
-import nazeel.pages.routine_menus.guest_supplies.SuppliesOrderPage;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
@@ -33,7 +31,7 @@ public class GuestSuppliesTS extends TestBase {
 
         sleep(4000);
         loginPage.selectPropertyByIndex(2);
-        waitForPageToLoad(DashboardPage.URL);
+        //waitForPageToLoad(DashboardPage.URL);
     }
 
     private void openGuestSuppliesPage() {

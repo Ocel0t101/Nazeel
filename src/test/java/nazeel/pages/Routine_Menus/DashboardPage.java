@@ -1,4 +1,4 @@
-package nazeel.pages;
+package nazeel.pages.Routine_Menus;
 
 import nazeel.utils.DelayedWebDriver;
 import org.openqa.selenium.By;
@@ -11,9 +11,6 @@ import org.testng.asserts.SoftAssert;
 
 
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import static nazeel.base.TestBase.getRootDriver;
 
@@ -25,14 +22,42 @@ public class DashboardPage extends SoftAssert {
     private static final By SUsages = By.xpath("//a[12]");
     private final By userVerificationLaterButton = By.xpath("//*[contains(text(),'Later')]");
     private final By reservationsMenuNode = By.cssSelector("[href = '/reservations']");
-    public final static String URL = "https://staging.nazeel.net:9002/dashboard";
+
+    private static final By Addons = By.linkText("Addons");
 
     //Actions
    /* public void clickOnUserVerificationLaterButton() {
         getRootDriver().findElement(userVerificationLaterButton).click(); }
    */
 
-    public  void OpenSuppliesUnitUsagesPage() throws InterruptedException {
+    public  void OpenAddonPage() throws InterruptedException {
+
+        getRootDriver().findElement(SetupMenu).click();
+
+        Thread.sleep(3000);
+
+        WebElement element = getRootDriver().findElement( By.xpath("//a[12]"));
+
+        DelayedWebDriver.DelayedWebElement delayedWebElement = new DelayedWebDriver.DelayedWebElement(element , 1000);
+
+        element = delayedWebElement.getWrappedElement();
+
+        JavascriptExecutor jsExecutor;
+
+        jsExecutor = (JavascriptExecutor) getRootDriver();
+
+        jsExecutor.executeScript("arguments[0].click();", element);
+
+        ((JavascriptExecutor) getRootDriver()).executeScript("arguments[0].scrollIntoView(true);", element);
+
+        Thread.sleep(3000);
+
+        getRootDriver().findElement(Addons).click();
+
+    }
+
+
+        public  void OpenSuppliesUnitUsagesPage() throws InterruptedException {
         getRootDriver().findElement(SetupMenu).click();
 
         Thread.sleep(3000);
